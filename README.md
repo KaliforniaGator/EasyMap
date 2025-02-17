@@ -1,3 +1,5 @@
+![Screen Shot 2025-02-16 at 9 12 15 PM](https://github.com/user-attachments/assets/f52df9ca-8638-4220-8b05-901ba566fbfa)
+
 # EasyMap
 EasyMap is a simple nmap helper tool designed to make it easy to perform network scans using nmap. It provides a user-friendly interface for selecting scan options and executing nmap commands.
 
