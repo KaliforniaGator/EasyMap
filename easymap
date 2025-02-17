@@ -1,0 +1,104 @@
+#!/bin/bash
+
+clear
+
+echo " ______                __  __             "
+echo "|  ____|              |  \/  |            "
+echo "| |__   __ _ ___ _   _| \  / | __ _ _ __  "
+echo "|  __| / _  / __| | | | |\/| |/ _  |  _ \""
+echo "| |___| (_| \__ \ |_| | |  | | (_| | |_) |"
+echo "|______\__,_|___/\__, |_|  |_|\__,_| .__/ "
+echo "                  __/ |            | |    "
+echo "                 |___/             |_|    "
+
+
+
+# Introduction and welcome message
+echo "Welcome to EasyMap, a simple nmap helper tool!"
+echo "This tool will guide you through the process of performing an nmap scan."
+
+# Prompt the user to enter the target IP address or hostname
+read -p "Enter the target IP address or hostname: " target
+
+# Ask the user to select the type of scan they want to perform
+echo -e "\nSelect the type of scan you want to perform:"
+echo "1. TCP SYN scan (Fast and reliable, sends a SYN packet and waits for a response)"
+echo "2. UDP scan (Scans for open UDP ports, can be slow and unreliable)"
+echo "3. TCP connect scan (Establishes a full TCP connection, can be slow and detectable)"
+echo "4. ACK scan (Sends an ACK packet to determine if a port is open or filtered)"
+echo "5. TCP Null scan (Sends a TCP packet with no flags set, can be used to evade firewalls)"
+echo "6. TCP FIN scan (Sends a TCP packet with the FIN flag set, can be used to evade firewalls)"
+echo "7. TCP Xmas scan (Sends a TCP packet with the FIN, URG, and PSH flags set, can be used to evade firewalls)"
+echo "8. TCP ACK scan (Sends an ACK packet to determine if a port is open or filtered, similar to ACK scan)"
+read -p "Enter your choice (1/2/3/4/5/6/7/8): " scan_type
+
+# Provide options for customizing the scan
+echo -e "\nDo you want to specify custom ports? (y/n)"
+read -p "Enter your choice (y/n): " custom_ports
+if [ "$custom_ports" = "y" ]; then
+  read -p "Enter the port range (e.g., 1-1024): " port_range
+fi
+
+# Ask the user if they want to perform OS detection
+echo -e "\nDo you want to perform OS detection? (y/n)"
+read -p "Enter your choice (y/n): " os_detection
+
+# Ask the user if they want to perform version detection
+echo -e "\nDo you want to perform version detection? (y/n)"
+read -p "Enter your choice (y/n): " version_detection
+
+# Ask the user if they want to use firewall/IDS evasion techniques
+echo -e "\nDo you want to use firewall/IDS evasion techniques? (y/n)"
+read -p "Enter your choice (y/n): " evasion
+
+# Ask the user to select the scan speed
+echo -e "\nSelect the scan speed:"
+echo "1. Paranoid (very slow, -T0)"
+echo "2. Sneaky (slow, -T1)"
+echo "3. Polite (medium, -T2)"
+echo "4. Normal (fast, -T3)"
+echo "5. Aggressive (very fast, -T4)"
+echo "6. Insane (extremely fast, -T5)"
+read -p "Enter your choice (1/2/3/4/5/6): " scan_speed
+
+# Execute the nmap command with the user-provided input
+case $scan_type in
+  1) scan_command="nmap -sS $target" ;;
+  2) scan_command="nmap -sU $target" ;;
+  3) scan_command="nmap -sT $target" ;;
+  4) scan_command="nmap -sA $target" ;;
+  5) scan_command="nmap -sN $target" ;;
+  6) scan_command="nmap -sF $target" ;;
+  7) scan_command="nmap -sX $target" ;;
+  8) scan_command="nmap -sA $target" ;;
+esac
+
+if [ "$custom_ports" = "y" ]; then
+  scan_command+=" -p $port_range"
+fi
+
+if [ "$os_detection" = "y" ]; then
+  scan_command+=" -O"
+fi
+
+if [ "$version_detection" = "y" ]; then
+  scan_command+=" -sV"
+fi
+
+if [ "$evasion" = "y" ]; then
+  scan_command+=" -f"
+fi
+
+case $scan_speed in
+  1) scan_command+=" -T0" ;;
+  2) scan_command+=" -T1" ;;
+  3) scan_command+=" -T2" ;;
+  4) scan_command+=" -T3" ;;
+  5) scan_command+=" -T4" ;;
+  6) scan_command+=" -T5" ;;
+esac
+
+echo -e "\nRunning command: $scan_command"
+$scan_command
+
+echo -e "\nScan complete! Thanks for using EasyMap."
