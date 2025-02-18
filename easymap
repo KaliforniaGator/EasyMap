@@ -51,6 +51,10 @@ read -p "Enter your choice (y/n): " version_detection
 echo -e "\nDo you want to use firewall/IDS evasion techniques? (y/n)"
 read -p "Enter your choice (y/n): " evasion
 
+# Ask the user if they want to user -Pn to skip host discovery
+echo -e "\nDo you want to skip host? This is assume all hosts are live. (y/n)"
+read -p "Enter your choice (y/n): " host_discovery
+
 # Ask the user to select the scan speed
 echo -e "\nSelect the scan speed:"
 echo "1. Paranoid (very slow, -T0)"
@@ -61,16 +65,22 @@ echo "5. Aggressive (very fast, -T4)"
 echo "6. Insane (extremely fast, -T5)"
 read -p "Enter your choice (1/2/3/4/5/6): " scan_speed
 
+if [ "$host_discovery" = "y" ]; then
+   scan_command="nmap -Pn"
+else
+   scan_command="nmap"
+fi
+
 # Execute the nmap command with the user-provided input
 case $scan_type in
-  1) scan_command="nmap -sS $target" ;;
-  2) scan_command="nmap -sU $target" ;;
-  3) scan_command="nmap -sT $target" ;;
-  4) scan_command="nmap -sA $target" ;;
-  5) scan_command="nmap -sN $target" ;;
-  6) scan_command="nmap -sF $target" ;;
-  7) scan_command="nmap -sX $target" ;;
-  8) scan_command="nmap -sA $target" ;;
+  1) scan_command+=" -sS $target" ;;
+  2) scan_command+=" -sU $target" ;;
+  3) scan_command+=" -sT $target" ;;
+  4) scan_command+=" -sA $target" ;;
+  5) scan_command+=" -sN $target" ;;
+  6) scan_command+=" -sF $target" ;;
+  7) scan_command+=" -sX $target" ;;
+  8) scan_command+=" -sA $target" ;;
 esac
 
 if [ "$custom_ports" = "y" ]; then
