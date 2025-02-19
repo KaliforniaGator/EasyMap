@@ -3,6 +3,9 @@
 # EasyMap
 EasyMap is a simple nmap helper tool designed to make it easy to perform network scans using nmap. It provides a user-friendly interface for selecting scan options and executing nmap commands.
 
+![Screen Shot 2025-02-18 at 10(1)(1)](https://github.com/user-attachments/assets/0f8bad66-59e5-4e08-9943-d69a03840b11)
+
+
 ## Features
 * Supports multiple scan types, including TCP SYN, UDP, TCP connect, ACK, TCP Null, TCP FIN, and TCP Xmas scans
 * Allows users to specify custom ports and port ranges
