@@ -2,6 +2,7 @@
 
 clear
 
+print-header(){
 echo " ______                __  __             "
 echo "|  ____|              |  \/  |            "
 echo "| |__   __ _ ___ _   _| \  / | __ _ _ __  "
@@ -10,12 +11,14 @@ echo "| |___| (_| \__ \ |_| | |  | | (_| | |_) |"
 echo "|______\__,_|___/\__, |_|  |_|\__,_| .__/ "
 echo "                  __/ |            | |    "
 echo "                 |___/             |_|    "
+}
 
+print-header
 
-
+print-welcome(){
 # Introduction and welcome message
 echo "Welcome to EasyMap, a simple nmap helper tool!"
-echo "This tool will guide you through the process of performing an nmap scan."
+echo "This tool will guide you through the process of performing an nmap scan.\n"
 
 # Prompt the user to enter the target IP address or hostname
 read -p "Enter the target IP address or hostname: " target
@@ -30,31 +33,43 @@ echo "5. TCP Null scan (Sends a TCP packet with no flags set, can be used to eva
 echo "6. TCP FIN scan (Sends a TCP packet with the FIN flag set, can be used to evade firewalls)"
 echo "7. TCP Xmas scan (Sends a TCP packet with the FIN, URG, and PSH flags set, can be used to evade firewalls)"
 echo "8. TCP ACK scan (Sends an ACK packet to determine if a port is open or filtered, similar to ACK scan)"
-read -p "Enter your choice (1/2/3/4/5/6/7/8): " scan_type
+read -p "Enter your choice: " scan_type
+}
 
+print-welcome
+
+print-options(){
+clear
+print-header
 # Provide options for customizing the scan
 echo -e "\nDo you want to specify custom ports? (y/n)"
-read -p "Enter your choice (y/n): " custom_ports
+read -p "Enter your choice: " custom_ports
 if [ "$custom_ports" = "y" ]; then
   read -p "Enter the port range (e.g., 1-1024): " port_range
 fi
 
 # Ask the user if they want to perform OS detection
 echo -e "\nDo you want to perform OS detection? (y/n)"
-read -p "Enter your choice (y/n): " os_detection
+read -p "Enter your choice: " os_detection
 
 # Ask the user if they want to perform version detection
 echo -e "\nDo you want to perform version detection? (y/n)"
-read -p "Enter your choice (y/n): " version_detection
+read -p "Enter your choice: " version_detection
 
 # Ask the user if they want to use firewall/IDS evasion techniques
 echo -e "\nDo you want to use firewall/IDS evasion techniques? (y/n)"
-read -p "Enter your choice (y/n): " evasion
+read -p "Enter your choice: " evasion
 
 # Ask the user if they want to user -Pn to skip host discovery
 echo -e "\nDo you want to skip host? This is assume all hosts are live. (y/n)"
-read -p "Enter your choice (y/n): " host_discovery
+read -p "Enter your choice: " host_discovery
+}
 
+print-options
+
+print-speed(){
+clear
+print-header
 # Ask the user to select the scan speed
 echo -e "\nSelect the scan speed:"
 echo "1. Paranoid (very slow, -T0)"
@@ -63,7 +78,10 @@ echo "3. Polite (medium, -T2)"
 echo "4. Normal (fast, -T3)"
 echo "5. Aggressive (very fast, -T4)"
 echo "6. Insane (extremely fast, -T5)"
-read -p "Enter your choice (1/2/3/4/5/6): " scan_speed
+read -p "Enter your choice: " scan_speed
+}
+
+print-speed
 
 if [ "$host_discovery" = "y" ]; then
    scan_command="nmap -Pn"
@@ -82,6 +100,80 @@ case $scan_type in
   7) scan_command+=" -sX $target" ;;
   8) scan_command+=" -sA $target" ;;
 esac
+
+print-scripts(){
+
+clear
+print-header
+#Ask user if they want to use a script
+echo -e "\nDo you want to use a script? (y/n)"
+read -p "Enter your choice: " scripts
+
+#Show user the different scripts
+if [ "$scripts" = "y" ]; then
+
+echo -e "\nChoose a script to use:"
+echo "1. Banner (A simple banner grabber which connects to an open TCP port and prints out anything sent by the listening service within five seconds.)"
+echo "2. Broadcast Listener (Sniffs the network for incoming broadcast communication and attempts to decode the received packets.)"
+echo "3. FTP Anon (Checks if an FTP server allows anonymous logins.)"
+echo "4. HTTP Enum (Enumerates directories used by popular web applications and servers.)"
+echo "5. HTTP UserDir Enum (Attempts to enumerate valid usernames on web servers running with the mod_userdir module or similar enabled.)"
+echo "6. FTP Brute (Performs brute force password auditing against FTP servers.)"
+echo "7. MySQL Databases (Attempts to list all databases on a MySQL server.)"
+echo "8. MySQL Brute (Performs password guessing against MySQL.)"
+echo "9. MySQL Empty Password (Checks for MySQL servers with an empty password for root or anonymous.)"
+echo "10. MySQL Enum (Performs valid-user enumeration against MySQL.)"
+echo "11. MySQL Users (Attempts to list all users on a MySQL server.)"
+echo "12. SMTP Brute (Performs brute force password auditing against SMTP servers using either LOGIN, PLAIN, CRAM-MD5, DIGEST-MD5 or NTLM authentication.)"
+echo "13. SMTP Strange Port (Checks if SMTP is running on a non-standard port.)"
+echo "14. Custom Script (Enter your own script with --script-args)"
+read -p "Enter your choice: " selected_script
+
+fi
+}
+
+print-scripts
+
+print-custom-script(){
+
+echo -e "\nEnter your custom scripts name using --script=SCRIPT-NAME, and any script arguments using --script-args=SCRIPT-ARGUMENTS."
+read -p "Enter your script: " custom_script
+scan_command+=" $custom_script"
+
+}
+
+case $selected_script in
+  1) scan_command+=" --script=banner";;
+  2) scan_command+=" --script=broadcast-listener";;
+  3) scan_command+=" -sC";;
+  4) scan_command+=" --script=http-enum";;
+  5) scan_command+=" --script=http-userdir-enum";;
+  6) scan_command+=" --script=ftp-brute";;
+  7) scan_command+=" --script=mysql-databases";;
+  8) scan_command+=" --script=mysql-brute";;
+  9) scan_command+=" --script=mysql-empty-password";;
+ 10) scan_command+=" --script=mysql-enum";;
+ 11) scan_command+=" --script=mysql-users";;
+ 12) scan_command+=" -p 25 --script=smtp-brute";;
+ 13) scan_command+=" --script=smtp-strangeport";;
+ 14) print-custom-script;;
+esac
+
+print-output(){
+
+echo -e "\nDo you want to print the output to a file? (y/n)"
+read -p "Enter your choice: " use_output_file
+
+if [ "$use_output_file" = "y" ]; then
+
+echo -e "\nEnter a file path to output to:"
+read -p "File Path: " file_path
+
+fi
+
+}
+
+print-output
 
 if [ "$custom_ports" = "y" ]; then
   scan_command+=" -p $port_range"
@@ -108,7 +200,14 @@ case $scan_speed in
   6) scan_command+=" -T5" ;;
 esac
 
+if [ -n "$file_path" ]; then
+
+scan_command+=" -oN $file_path"
+
+fi
+
 echo -e "\nRunning command: $scan_command"
+echo -e "\n\033[1m--------------OUTPUT--------------\033[0m"
 $scan_command
 
-echo -e "\nScan complete! Thanks for using EasyMap."
+echo -e "\n\nScan complete! Thanks for using EasyMap."
