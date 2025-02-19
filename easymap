@@ -44,7 +44,21 @@ print-welcome(){
 echo "Welcome to EasyMap, a simple nmap helper tool!"
 echo "This tool will guide you through the process of performing an nmap scan.\n"
 
+echo -e "\nDo you want to use SUDO for this command? (y/n)"
+read -p "Enter your choice: " super_user_do
+
+if [ "$super_user_do" = "y" ]; then
+
+  scan_command="sudo "
+
+else
+
+  scan_command=""
+
+fi
+
 # Prompt the user to enter the target IP address or hostname
+echo -e "\n"
 read -p "Enter the target IP address or hostname: " target
 
 # Ask the user to select the type of scan they want to perform
@@ -58,6 +72,7 @@ echo "6. TCP FIN scan (Sends a TCP packet with the FIN flag set, can be used to 
 echo "7. TCP Xmas scan (Sends a TCP packet with the FIN, URG, and PSH flags set, can be used to evade firewalls)"
 echo "8. TCP ACK scan (Sends an ACK packet to determine if a port is open or filtered, similar to ACK scan)"
 read -p "Enter your choice: " scan_type
+
 }
 
 print-welcome
@@ -108,9 +123,9 @@ read -p "Enter your choice: " scan_speed
 print-speed
 
 if [ "$host_discovery" = "y" ]; then
-   scan_command="nmap -Pn"
+   scan_command+="nmap -Pn"
 else
-   scan_command="nmap"
+   scan_command+="nmap"
 fi
 
 # Execute the nmap command with the user-provided input
