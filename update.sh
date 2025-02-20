@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Check if curl is installed
-if ! command -v curl &> /dev/null; then
-    echo "curl is not installed. Please install it before proceeding."
+if ! command -v wget &> /dev/null; then
+    echo "wget is not installed. Please install it before proceeding."
     exit 1
 fi
 
@@ -43,7 +43,7 @@ echo "Removing old version..."
 sudo rm -rf easymap
 # Download the latest EasyMap binary
 echo "Downloading latest EasyMap binary..."
-curl -LO https://github.com/KaliforniaGator/EasyMap/releases/latest/download/easymap
+wget https://raw.githubusercontent.com/KaliforniaGator/EasyMap/refs/heads/main/easymap
 
 # Make the downloaded binary executable
 echo "Making the downloaded binary executable..."
