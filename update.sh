@@ -39,6 +39,8 @@ else
     echo "Unsupported package manager. Please update nmap manually."
 fi
 
+echo "Removing old version..."
+sudo rm -rf easymap
 # Download the latest EasyMap binary
 echo "Downloading latest EasyMap binary..."
 curl -LO https://github.com/KaliforniaGator/EasyMap/releases/latest/download/easymap
@@ -46,13 +48,5 @@ curl -LO https://github.com/KaliforniaGator/EasyMap/releases/latest/download/eas
 # Make the downloaded binary executable
 echo "Making the downloaded binary executable..."
 chmod +x easymap
-
-# Replace the old EasyMap binary with the new one
-echo "Replacing the old EasyMap binary with the new one..."
-if [ -f "/usr/local/bin/easymap" ]; then
-    sudo mv easymap /usr/local/bin/easymap
-else
-    sudo mv easymap /usr/local/bin/
-fi
 
 echo "Update complete!"
