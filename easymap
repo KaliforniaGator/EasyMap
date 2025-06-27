@@ -174,7 +174,7 @@ print-header
 
 print-welcome(){
     echo "Welcome to EasyMap, a simple nmap helper tool!"
-    echo "This tool will guide you through the process of performing an nmap scan.\n"
+    echo -e "This tool will guide you through the process of performing an nmap scan.\n"
 
     while true; do
         echo -e "\nDo you want to use SUDO for this command? (y/n)"
